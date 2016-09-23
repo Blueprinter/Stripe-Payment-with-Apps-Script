@@ -1,0 +1,161 @@
+<script>
+  var BALANCE,STRIPE_KEY; // Global variables
+  BALANCE = 0;
+  STRIPE_KEY = 'pk_test_etc';
+
+  //For testing and developement -- use the test credit card number 4242 4242 4242 4242
+  //stripe provides 4 keys - two for testing and two for live payment processing
+  //There is a Publishable (public) and Secret (private) key
+  //The Publishable key is put into the client side JavaScript code
+  //Never put the Secret key into client side code
+  //The Secret key is put into the server code - gs file
+  //The publishable key begins with "pk_test"
+  //The secret key begins with "pk_live"
+  
+  window.onload = function() {
+  try{   
+    google.script.run
+      .withFailureHandler(onFailure)
+      .withSuccessHandler(gotBalance)
+      .accountFunctions('balance');
+   } catch(e) {
+     onFailure(e);
+   };
+  };
+  
+  window.gotBalance = function(newBalance) {
+    BALANCE = newBalance;
+    $$('idBalance').innerHTML = "<span><b>Premium Balance: $" + BALANCE + "</b></span>";
+  };
+
+  window.handlerStripe = StripeCheckout.configure({
+    key: STRIPE_KEY,
+    image: 'https://s3.amazonaws.com/stripe-uploads/acct_18uO4cBvRUKk1pzVmerchant-icon-1474040163353-DataStrmWnmbrs128.png',
+    token: function(token) {
+      var amount,credits,description,jsonString,selectionValue;
+      // Use the token to create the charge with a server-side script.
+      // You can access the token ID with `token.id`
+
+      selectionValue = $$('rowOptions').elements.stripeOptionsC.value;
+      
+      console.log("selectionValue: "+ selectionValue);
+      
+      description = selectionValue.substring(0,selectionValue.lastIndexOf('-'));
+      amount = selectionValue.substr(selectionValue.lastIndexOf('-')+1);
+      credits = selectionValue.substr(0,selectionValue.indexOf('-'));
+
+      console.log("description: " + description);
+      console.log("amount: " + amount);
+      console.log("credits: " + credits);
+      
+      jsonString = JSON.stringify( {
+        token: token, amount: amount, description: description, credits: credits 
+        } );
+     
+      console.log('handlerStripe function ran');
+      
+      google.script.run
+        .withFailureHandler(onFailure)
+        .withSuccessHandler(chargeSuccess)
+        .processCharge(jsonString);
+        }
+    });
+    
+    window.openStripeForm = function() {
+      var amount,description,selectionValue;
+      
+      selectionValue = $$('rowOptions').elements.stripeOptionsC.value;
+      console.log("selectionValue: "+ selectionValue);
+
+      description = selectionValue.substring(0,selectionValue.lastIndexOf('-'));
+      console.log("description: " + description);
+      
+      amount = selectionValue.substr(selectionValue.lastIndexOf('-')+1); // "get from radio selection";
+      console.log("amount: " + amount);
+
+      handlerStripe.open({
+        name: description,
+        description: 'Company Name',
+        amount: Number(amount),
+        currency: 'USD',
+        panelLabel: "Pay {{amount}}",
+        zipCode: true,
+        opened: stripeOpenCallback(),
+        closed: stripeClosedCallback()
+      });
+    };
+  
+
+  function stripeOpenCallback() {
+   try{
+    // user has opened Stripe
+    console.log('user has opened stripe');
+    return;
+   } catch(e){
+     onFailure(e);
+   };
+  };
+
+  function stripeClosedCallback() {
+   try{
+    // user has closed Stripe
+    console.log('user has closed stripe');
+    return;
+   } catch(e){
+     onFailure(e);
+   }
+  }
+
+  window.chargeSuccess = function (results) {
+    var credits,el,responseCode;
+    
+    console.log("chargeSuccess ran:");
+    console.log("results: " + results);
+    
+  try{
+    responseCode = results[0];
+    credits = results[1];
+    
+    console.log("responseCode: " + responseCode);
+    console.log("credits: " + credits);
+    
+    if (responseCode === 200) {// payment was successful - Update their remaining balance at the top
+      console.log("=== 200");
+            
+      google.script.run
+        .withFailureHandler(onFailure)
+        .withSuccessHandler(
+        
+        function(newBalance) {          
+          console.log("newBalance: " + newBalance);
+          
+          $$('idBalance').innerHTML = "<span><b>Old Balance: $" + BALANCE + "</b></span>";
+          $$('idNewBalance').innerHTML = "<span><b>New Balance: $" + newBalance + "</b></span>";
+          
+          BALANCE = newBalance;
+          
+          $$('firstRow').innerHTML = '&nbsp;';
+        }
+      ).accountFunctions('add',credits);
+       
+      el = $$('pageStripeBuyCondition');
+      fadeOut(el,1000)
+
+    } else { // In theory this should not be called, since chargeSuccess is only for successfully charged credit cards.
+      // sorry the payment was not successful
+      $$("firstRow").innerHTML = '<span style="color:red;">ERROR!</span><br>';
+      $$("firstRow").style.display = "block";
+    }
+    return;
+   } catch(e){
+     onFailure(e);
+   }
+  }
+
+  window.onFailure = function(e) {
+    console.log(e.message);
+
+    $$('firstRow').innerHTML = "ERROR: " +  e.message +
+                        '<a href="https://your-webpage" target="_blank">website</a>.';
+  };
+</script>
