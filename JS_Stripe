@@ -12,8 +12,8 @@
   //The publishable key begins with "pk_test"
   //The secret key begins with "pk_live"
   
-  window.onload = function() {
-  try{   
+  window.onload = function() {//This code runs after the web app is done loading
+  try {   
     google.script.run
       .withFailureHandler(onFailure)
       .withSuccessHandler(gotBalance)
