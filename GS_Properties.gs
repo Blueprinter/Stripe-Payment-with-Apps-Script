@@ -17,7 +17,7 @@ function getUsrPrp(a) {//get Property
   };
 };
 
-function setUsrPrp(a,b) {
+function setUsrPrp(a,b) {//Save a value to USER properties
   var i;
   if (typeof b==='object') {b=JSON.stringify(b);};
   for (i=1;i<6;i+=1) {try{
