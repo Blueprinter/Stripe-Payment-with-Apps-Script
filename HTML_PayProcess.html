@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8">
+  <title>Your Add-on Name</title>
+  <meta name="description" content="Your Add-on Name - a Google Docs Sheets add-on to do something.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <script src="https://checkout.stripe.com/checkout.js"></script>
+  <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+  
+  <?!= HtmlService.createHtmlOutputFromFile('CSS_Index').getContent(); ?>
+  <?!= HtmlService.createHtmlOutputFromFile('JS_$').getContent(); ?>
+
+ </head>
+ 
+  <body style="margin-top:50px;margin-left:100px;">
+    <div id="idBalance">&nbsp;</div> <!-- Balance line -->
+    <div id="idNewBalance">&nbsp;</div>
+    <div><span id="firstRow">&nbsp;</span></div> <!-- Message line -->
+  
+  <!-- STRIPE BUY NOW PAGE -->
+  <div id="pageStripeBuyCondition">
+    <!-- Remove options  -->
+    <div><b>Purchase options</b></div>
+    
+    <form id="rowOptions">
+      <div>
+        <input type="radio" class="stripeCheckboxInput" name="stripeOptionsC" id="stripeOption100C" value="5-1 Month-600" style="width:30;" checked>
+        <label for="stripeOption100C">1 Month .. $6.00 USD</label>
+      </div>
+      <div>
+        <input type="radio" class="stripeCheckboxInput" name="stripeOptionsC" id="stripeOption500C" value="25-6 Months-2600" style="width:30;">
+        <label for="stripeOption500C">6 Months .. $26.00 USD</label>
+      </div>
+      <div>
+        <input type="radio" class="stripeCheckboxInput" name="stripeOptionsC" id="stripeOption1000C" value="50-1 Yr-5100" style="width:30;">
+        <label for="stripeOption1000C">1 Year .. $51.00 USD</label>
+      </div>
+    </form>
+    <div  class="secondary">Pricing: Plan Fee plus $1 processing fee</div>
+    <br/>
+    
+    <div class="block" id="payPalButtonBarB" align="left">
+      <button id="stripeButtonCondition" onmouseup="openStripeForm()" class="action">Buy</button>
+    </div>
+
+    <div id="payErrorC" style="display:none;"></div>
+  </div>
+
+  <?!= HtmlService.createHtmlOutputFromFile('JS_Stripe').getContent(); ?>
+
+</body>
+
+<br/>
+
+<footer>
+  <div>
+    <span>
+      <img alt="Add-on logo" class="logo" width="27" height="27" 
+               src="https://github.com/swebster22/appfiles/blob/master/SW-Logo-128x128.png?raw=true" >
+    </span>
+  </div>
+</footer>
+</html>
