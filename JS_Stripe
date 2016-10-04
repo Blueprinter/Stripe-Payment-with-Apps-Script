@@ -11,22 +11,6 @@
   //The Secret key is put into the server code - gs file
   //The publishable key begins with "pk_test"
   //The secret key begins with "pk_live"
-  
-  window.onload = function() {//This code runs after the web app is done loading
-  try {   
-    google.script.run
-      .withFailureHandler(onFailure)
-      .withSuccessHandler(gotBalance)
-      .accountFunctions('balance');
-   } catch(e) {
-     onFailure(e);
-   };
-  };
-  
-  window.gotBalance = function(newBalance) {
-    BALANCE = newBalance;
-    $$('idBalance').innerHTML = "<span><b>Premium Balance: $" + BALANCE + "</b></span>";
-  };
 
   window.handlerStripe = StripeCheckout.configure({
     key: STRIPE_KEY,
