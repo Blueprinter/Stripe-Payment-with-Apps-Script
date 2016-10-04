@@ -29,3 +29,8 @@ function accountFunctions(action,amount) {
 
   return crrntBalance;
 };
+
+function acctBalHtml() {
+  var bal = accountFunctions('balance');
+  return "<span><b>What you have Donated: $" + bal + "</b></span>";
+};
