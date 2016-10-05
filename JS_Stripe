@@ -1,8 +1,5 @@
 <script>
-  var BALANCE,STRIPE_KEY; // Global variables
-  BALANCE = 0;
-  STRIPE_KEY = 'pk_test_etc';
-
+  //Add the key directly to the "key" setting in the configure object
   //For testing and developement -- use the test credit card number 4242 4242 4242 4242
   //stripe provides 4 keys - two for testing and two for live payment processing
   //There is a Publishable (public) and Secret (private) key
@@ -13,7 +10,7 @@
   //The secret key begins with "pk_live"
 
   window.handlerStripe = StripeCheckout.configure({
-    key: STRIPE_KEY,
+    key: 'pk_test_etc',//'pk_live_etc'
     image: 'https://s3.amazonaws.com/stripe-uploads/acct_18uO4cBvRUKk1pzVmerchant-icon-1474040163353-DataStrmWnmbrs128.png',
     token: function(token) {
       var amount,credits,description,jsonString,selectionValue;
@@ -112,12 +109,8 @@
         
         function(newBalance) {          
           console.log("newBalance: " + newBalance);
-          
-          $$('idBalance').innerHTML = "<span><b>Old Balance: $" + BALANCE + "</b></span>";
+
           $$('idNewBalance').innerHTML = "<span><b>New Balance: $" + newBalance + "</b></span>";
-          
-          BALANCE = newBalance;
-          
           $$('firstRow').innerHTML = '&nbsp;';
         }
       ).accountFunctions('add',credits);
