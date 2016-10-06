@@ -61,8 +61,8 @@
         currency: 'USD',
         panelLabel: "Pay {{amount}}",
         zipCode: true,
-        opened: stripeOpenCallback(),
-        closed: stripeClosedCallback()
+        opened: stripeOpenCallback,
+        closed: stripeClosedCallback
       });
     };
   
