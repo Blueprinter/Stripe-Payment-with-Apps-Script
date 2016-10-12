@@ -18,3 +18,15 @@ https://developers.google.com/apps-script/guides/html/templates
 You must know and understand the 2 different modes used by stripe.com
 stripe.com has a "test" mode and a "live" mode
 
+stripe provides some code that you must use in the client-side HTML
+
+<script src="https://checkout.stripe.com/checkout.js"></script>
+
+Put that in the <head> tag
+
+<head>
+  <script src="https://checkout.stripe.com/checkout.js"></script>
+</head>
+  
+The flow of events for this set up, is that the actual payment processing is done from Google's server to stripes server, not from the users computer (client side) to Stripe.  So, you need to collect payment information, send it to a "gs" script file, and then make a urlFetchApp.fetch(url) call to Stripe.  Then a confirmation comes back, and you need a "success handler" in the client side JavaScript code.  
+
