@@ -1,3 +1,7 @@
+Note that there is now a new repo with stripe version 3 code in the repo
+
+https://github.com/Blueprinter/stripe-js.v3-using-elements
+
 # Stripe-Payment-with-Apps-Script
 Process an online payment from Stripe with Apps Script
 
